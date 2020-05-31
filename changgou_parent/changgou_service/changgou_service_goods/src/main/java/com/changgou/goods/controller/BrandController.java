@@ -5,7 +5,9 @@ import com.changgou.goods.service.BrandService;
 import com.github.pagehelper.PageInfo;
 import com.changgou.framework.entity.Result;
 import com.changgou.framework.entity.StatusCode;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/4/6 19:47
  */
+@Api(value = "品牌Controller", tags = {"品牌访问接口"})
 @RestController
 @RequestMapping("/brand")
 @CrossOrigin
@@ -28,10 +31,24 @@ public class BrandController {
      *
      * @return
      */
+    @ApiOperation(value = "查询全部品牌1")
+    @ApiResponses(value = {@ApiResponse(code = 20000, message = "查询所有品牌成功"),
+            @ApiResponse(code = 20001, message = "没有查询到品牌数据"),
+            @ApiResponse(code = 20002, message = "查询失败")})
     @GetMapping
     public Result<List<Brand>> findBrand() {
-        List<Brand> brandList = this.brandService.findBrand();
-        return new Result<List<Brand>>(true, StatusCode.OK, "查询所有品牌成功", brandList);
+        try {
+            List<Brand> brandList = this.brandService.findBrand();
+            if (!CollectionUtils.isEmpty(brandList)) {
+                return new Result<List<Brand>>(true, StatusCode.OK, "查询所有品牌成功", brandList);
+            } else {
+                return new Result<List<Brand>>(false, StatusCode.NOT_FIND, "没有查询到品牌数据");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new Result<List<Brand>>(false, StatusCode.ERROR, "查询失败");
     }
 
     /**
@@ -39,8 +56,9 @@ public class BrandController {
      *
      * @return
      */
+    @ApiOperation(value = "根据ID查询品牌")
     @GetMapping("/{id}")
-    public Result<Brand> findBrandById(@PathVariable Integer id) {
+    public Result<Brand> findBrandById(@ApiParam("品牌ID") @PathVariable Integer id) {
         Brand brand = this.brandService.findBrandById(id);
         return new Result<Brand>(true, StatusCode.OK, "根据ID查询品牌成功", brand);
     }
