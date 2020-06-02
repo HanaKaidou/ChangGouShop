@@ -9,6 +9,8 @@ import org.csource.fastdfs.TrackerServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author 常恃豪
@@ -39,12 +41,12 @@ public class FastDFSClient {
      * @param file 上传的文件信息封装
      * @return
      */
-    public Boolean upload(FastDFSFile file) {
+    public static Boolean upload(FastDFSFile file) {
         NameValuePair[] meta_list = new NameValuePair[4];
         meta_list[0] = new NameValuePair("author", file.getAuthor());
         meta_list[1] = new NameValuePair("fileName", file.getFileName());
         meta_list[2] = new NameValuePair("uploader", file.getUploader());
-        meta_list[3] = new NameValuePair("uploadDate", file.getUploadDate().toString());
+        meta_list[3] = new NameValuePair("uploadDate", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 
         try {
             //创建Tracker的访问客户端

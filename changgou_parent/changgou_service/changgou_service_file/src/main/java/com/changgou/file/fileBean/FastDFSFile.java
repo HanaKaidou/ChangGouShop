@@ -30,6 +30,15 @@ public class FastDFSFile implements Serializable {
         this.ext = ext;
     }
 
+    public FastDFSFile(String fileName, byte[] content, String ext, String md5, String author, String uploader) {
+        this.fileName = fileName;
+        this.content = content;
+        this.ext = ext;
+        this.md5 = md5;
+        this.author = author;
+        this.uploader = uploader;
+    }
+
     public String getFileName() {
         return fileName;
     }
