@@ -9,6 +9,7 @@ import org.csource.fastdfs.TrackerServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,30 +42,22 @@ public class FastDFSClient {
      * @param file 上传的文件信息封装
      * @return
      */
-    public static Boolean upload(FastDFSFile file) {
+    public static String[] upload(FastDFSFile file) {
         NameValuePair[] meta_list = new NameValuePair[4];
         meta_list[0] = new NameValuePair("author", file.getAuthor());
         meta_list[1] = new NameValuePair("fileName", file.getFileName());
         meta_list[2] = new NameValuePair("uploader", file.getUploader());
         meta_list[3] = new NameValuePair("uploadDate", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
-
+        String[] uploadResults = null;
         try {
-            //创建Tracker的访问客户端
-            TrackerClient trackerClient = new TrackerClient();
-
-            //通过访问TrackerClient的连接 获取到TrackerServer
-            TrackerServer trackerServer = trackerClient.getConnection();
-
-            //通过TrackerSerever获取到StorageClient的连接信息
-            StorageClient storageClient = new StorageClient(trackerServer, null);
-
-            //1)文件字节数组 2)文件扩展名 3)文件作者、文件名、上传者、上传时间
-            storageClient.upload_file(file.getContent(), file.getExt(), meta_list);
+            TrackerClient trackerClient = new TrackerClient();//创建Tracker的访问客户端
+            TrackerServer trackerServer = trackerClient.getConnection();//通过访问TrackerClient的连接 获取到TrackerServer
+            StorageClient storageClient = new StorageClient(trackerServer, null);//通过TrackerSerever获取到StorageClient的连接信息
+            uploadResults = storageClient.upload_file(file.getContent(), file.getExt(), meta_list);//1)文件字节数组 2)文件扩展名 3)文件作者、文件名、上传者、上传时间
         } catch (Exception e) {
             logger.error("Exception when uploading the file:" + file.getFileName(), e);
-            return false;
         }
-        return true;
+        return uploadResults;
     }
 
 }

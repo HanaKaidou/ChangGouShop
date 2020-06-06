@@ -23,22 +23,27 @@ import java.io.IOException;
 public class FileUploadController {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
+    public static final String FastDFS_Nginx_01 = "192.168.32.3:8080/";
+
     /**
      * 文件上传
+     *
      * @param file
      * @return
      */
     @PostMapping()
     public Result upload(@RequestParam(value = "file") MultipartFile file) {
         FastDFSFile fastDFSFile = null;
+        String url = null;
         try {
             fastDFSFile = new FastDFSFile(
                     file.getOriginalFilename(),
                     file.getBytes(),
                     StringUtils.getFilenameExtension(file.getOriginalFilename())
             );
-            Boolean flag = FastDFSClient.upload(fastDFSFile);
-            if (!flag) {
+            String[] uploadResults = FastDFSClient.upload(fastDFSFile);
+            url = "http://" + FastDFS_Nginx_01 + uploadResults[0] + "/" + uploadResults[1];
+            if (uploadResults == null) {
                 return new Result(false, StatusCode.ERROR, "文件上传失败");
             }
         } catch (Exception e) {
@@ -46,6 +51,6 @@ public class FileUploadController {
             return new Result(false, StatusCode.ERROR, "文件上传出现异常");
         }
 
-        return new Result(true, StatusCode.OK, "文件上传成功");
+        return new Result(true, StatusCode.OK, "文件上传成功,url:" + url);
     }
 }
