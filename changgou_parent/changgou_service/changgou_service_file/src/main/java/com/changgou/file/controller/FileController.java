@@ -10,18 +10,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 /**
  * @author 常恃豪
  * @version 1.0
  * @date 2020/6/2 21:53
  */
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/file")
 @CrossOrigin
-public class FileUploadController {
-    private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+public class FileController {
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     public static final String FastDFS_Nginx_01 = "192.168.32.3:8080/";
 
@@ -31,7 +29,7 @@ public class FileUploadController {
      * @param file
      * @return
      */
-    @PostMapping()
+    @PostMapping("/upload")
     public Result upload(@RequestParam(value = "file") MultipartFile file) {
         FastDFSFile fastDFSFile = null;
         String url = null;
@@ -41,7 +39,7 @@ public class FileUploadController {
                     file.getBytes(),
                     StringUtils.getFilenameExtension(file.getOriginalFilename())
             );
-            String[] uploadResults = FastDFSClient.upload(fastDFSFile);
+            String[] uploadResults = FastDFSClient.uploadFile(fastDFSFile);
             url = "http://" + FastDFS_Nginx_01 + uploadResults[0] + "/" + uploadResults[1];
             if (uploadResults == null) {
                 return new Result(false, StatusCode.ERROR, "文件上传失败");
@@ -53,4 +51,5 @@ public class FileUploadController {
 
         return new Result(true, StatusCode.OK, "文件上传成功,url:" + url);
     }
+
 }

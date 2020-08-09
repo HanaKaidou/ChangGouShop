@@ -31,7 +31,7 @@ public class BrandController {
      *
      * @return
      */
-    @ApiOperation(value = "查询全部品牌1")
+    @ApiOperation(value = "查询全部品牌")
     @ApiResponses(value = {@ApiResponse(code = 20000, message = "查询所有品牌成功"),
             @ApiResponse(code = 20001, message = "没有查询到品牌数据"),
             @ApiResponse(code = 20002, message = "查询失败")})
