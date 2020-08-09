@@ -33,6 +33,7 @@ public class TemplateController {
      * @param pageSize
      * @return
      */
+    @PostMapping("/search/{pageIndex}/{pageSize}")
     public Result<PageInfo> findPage(@RequestBody(required = false) Template template, @PathVariable Integer pageIndex, @PathVariable Integer pageSize) {
         PageInfo<Template> pageInfo = this.templateService.findPage(template, pageIndex, pageSize);
         return new Result<PageInfo>(true, StatusCode.OK, "分页多条件查询规格参数模板成功", pageInfo);

@@ -34,6 +34,7 @@ public class CategoryController {
      * @param pageSize
      * @return
      */
+    @PostMapping("/search/{pageIndex}/{pageSize}")
     public Result<PageInfo> findPage(@RequestBody(required = false) Category category, @PathVariable Integer pageIndex, @PathVariable Integer pageSize) {
         PageInfo<Category> pageInfo = this.categoryService.findPage(category, pageIndex, pageSize);
         return new Result<PageInfo>(true, StatusCode.OK, "分页多条件查询商品分类成功", pageInfo);
@@ -121,6 +122,16 @@ public class CategoryController {
     public Result add(@RequestBody Category category) {
         categoryService.add(category);
         return new Result(true, StatusCode.OK, "添加商品分类成功");
+    }
+
+    /**
+     * 根据父ID查询
+     */
+    @RequestMapping(value = "/search/parent/{pid}")
+    public Result<Category> findByPrantId(@PathVariable Integer pid) {
+        //根据父节点ID查询
+        List<Category> list = categoryService.findByParentId(pid);
+        return new Result<Category>(true, StatusCode.OK, "查询商品分类成功", list);
     }
 
 }

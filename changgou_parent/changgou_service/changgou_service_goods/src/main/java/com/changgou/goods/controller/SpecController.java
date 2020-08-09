@@ -34,6 +34,7 @@ public class SpecController {
      * @param pageSize
      * @return
      */
+    @PostMapping("/search/{pageIndex}/{pageSize}")
     public Result<PageInfo> findPage(@RequestBody(required = false) Spec spec, @PathVariable Integer pageIndex, @PathVariable Integer pageSize) {
         PageInfo<Spec> pageInfo = this.specService.findPage(spec, pageIndex, pageSize);
         return new Result<PageInfo>(true, StatusCode.OK, "分页多条件查询规格成功", pageInfo);

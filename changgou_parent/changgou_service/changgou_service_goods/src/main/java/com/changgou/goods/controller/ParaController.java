@@ -33,6 +33,7 @@ public class ParaController {
      * @param pageSize
      * @return
      */
+    @PostMapping("/search/{pageIndex}/{pageSize}")
     public Result<PageInfo> findPage(@RequestBody(required = false) Para para, @PathVariable Integer pageIndex, @PathVariable Integer pageSize) {
         PageInfo<Para> pageInfo = this.paraService.findPage(para, pageIndex, pageSize);
         return new Result<PageInfo>(true, StatusCode.OK, "分页多条件查询参数成功", pageInfo);
